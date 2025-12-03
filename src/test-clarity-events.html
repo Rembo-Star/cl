@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clarity Events Test Page</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #0C0E12;
+            color: white;
+        }
+        h1 {
+            color: #A3F73B;
+        }
+        .event-section {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(163, 247, 59, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        button {
+            background: linear-gradient(135deg, #A3F73B 0%, #27C7E6 100%);
+            color: #0C0E12;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            margin: 5px;
+        }
+        button:hover {
+            transform: scale(1.05);
+        }
+        .log {
+            background: #000;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+        }
+        .log-entry {
+            margin: 5px 0;
+            padding: 5px;
+            border-left: 3px solid #A3F73B;
+            padding-left: 10px;
+        }
+        .success { color: #A3F73B; }
+        .warning { color: #FFA500; }
+        .info { color: #27C7E6; }
+    </style>
+</head>
+<body>
+    <h1>🧪 MS Clarity Events Test Page</h1>
+    <p>Test all tracking events for Chilean Casino Prelanding</p>
+    <p><strong>Project ID:</strong> ufq3clrf2z</p>
+
+    <div class="event-section">
+        <h2>📊 Page Tracking</h2>
+        <button onclick="testPageView()">Test Page View</button>
+        <p>Expected event: <code>page_view: "prelanding"</code></p>
+    </div>
+
+    <div class="event-section">
+        <h2>🎯 Click Events</h2>
+        <button onclick="testMainCTA()">Test Main CTA Click</button>
+        <button onclick="testLogoCTA()">Test Logo Click</button>
+        <button onclick="testTagCTA()">Test Tag Click</button>
+        <p>Expected events: <code>cta_main_continuar_click</code>, <code>cta_logo_chile_access_click</code>, <code>cta_tag_exclusivo_hoy_click</code></p>
+    </div>
+
+    <div class="event-section">
+        <h2>📏 Scroll Tracking</h2>
+        <button onclick="testScroll(25)">Test 25% Scroll</button>
+        <button onclick="testScroll(50)">Test 50% Scroll</button>
+        <button onclick="testScroll(75)">Test 75% Scroll</button>
+        <button onclick="testScroll(100)">Test 100% Scroll</button>
+        <p>Expected events: <code>scroll_hero_25</code>, <code>scroll_hero_50</code>, etc.</p>
+    </div>
+
+    <div class="event-section">
+        <h2>🔴 Behavioral Events</h2>
+        <button onclick="testRageClick()">Test Rage Click</button>
+        <button onclick="testHesitation()">Test Hesitation</button>
+        <button onclick="testExitIntent()">Test Exit Intent</button>
+        <button onclick="testHover()">Test Hover</button>
+        <p>Expected events: <code>rage_click_cta_main</code>, <code>hesitation_main_continuar</code>, etc.</p>
+    </div>
+
+    <div class="event-section">
+        <h2>🎯 Conversion Events</h2>
+        <button onclick="testRedirect()">Test Redirect Event</button>
+        <p>Expected event: <code>redirect_to_offer</code> with timestamp</p>
+    </div>
+
+    <div class="event-section">
+        <h2>🔍 Status</h2>
+        <button onclick="checkClarityLoaded()">Check Clarity Loaded</button>
+        <button onclick="clearLog()">Clear Log</button>
+        <p id="status" class="info">Click "Check Clarity Loaded" to verify installation</p>
+    </div>
+
+    <div class="log" id="eventLog">
+        <div class="log-entry success">🟢 Test page loaded. Click buttons above to test events.</div>
+    </div>
+
+    <!-- MS Clarity Script -->
+    <script type="text/javascript">
+        (function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/ufq3clrf2z";
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window, document, "clarity", "script", "ufq3clrf2z");
+    </script>
+
+    <!-- Test Functions -->
+    <script>
+        function log(message, type = 'info') {
+            const logDiv = document.getElementById('eventLog');
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            const timestamp = new Date().toLocaleTimeString();
+            entry.textContent = `[${timestamp}] ${message}`;
+            logDiv.insertBefore(entry, logDiv.firstChild);
+        }
+
+        function checkClarityLoaded() {
+            if (typeof window.clarity === 'function') {
+                log('✅ MS Clarity is loaded and ready!', 'success');
+                document.getElementById('status').innerHTML = '<span class="success">✅ Clarity Active</span>';
+            } else {
+                log('❌ MS Clarity not loaded. Check console for errors.', 'warning');
+                document.getElementById('status').innerHTML = '<span class="warning">❌ Clarity Not Loaded</span>';
+            }
+        }
+
+        function testPageView() {
+            if (window.clarity) {
+                window.clarity("set", "page_view", "prelanding");
+                log('📊 Event fired: page_view = "prelanding"', 'success');
+            } else {
+                log('❌ Clarity not loaded', 'warning');
+            }
+        }
+
+        function testMainCTA() {
+            if (window.clarity) {
+                window.clarity("set", "cta_main_continuar_click", true);
+                log('🎯 Event fired: cta_main_continuar_click = true', 'success');
+            } else {
+                log('❌ Clarity not loaded', 'warning');
+            }
+        }
+
+        function testLogoCTA() {
+            if (window.clarity) {
+                window.clarity("set", "cta_logo_chile_access_click", true);
+                log('🎯 Event fired: cta_logo_chile_access_click = true', 'success');
+            } else {
+                log('❌ Clarity not loaded', 'warning');
+            }
+        }
+
+        function testTagCTA() {
+            if (window.clarity) {
+                window.clarity("set", "cta_tag_exclusivo_hoy_click", true);
+                log('🎯 Event fired: cta_tag_exclusivo_hoy_click = true', 'success');
+            } else {
+                log('❌ Clarity not loaded', 'warning');
+            }
+        }
+
+        function testScroll(depth) {
+            if (window.clarity) {
+                window.clarity("set", `scroll_hero_${depth}`, depth);
+                log(`📏 Event fired: scroll_hero_${depth} = ${depth}`, 'success');
+            } else {
+                log('❌ Clarity not loaded', 'warning');
+            }
+        }
+
+        function testRageClick() {
+            if (window.clarity) {
+                window.clarity("set", "rage_click_cta_main", true);
+                log('🔴 Event fired: rage_click_cta_main = true', 'warning');
+            } else {
+                log('❌ Clarity not loaded', 'warning');
+            }
+        }
+
+        function testHesitation() {
+            if (window.clarity) {
+                window.clarity("set", "hesitation_main_continuar", 2500);
+                log('⏱️ Event fired: hesitation_main_continuar = 2500ms', 'info');
+            } else {
+                log('❌ Clarity not loaded', 'warning');
+            }
+        }
+
+        function testExitIntent() {
+            if (window.clarity) {
+                window.clarity("set", "exit_intent", true);
+                log('🚪 Event fired: exit_intent = true', 'info');
+            } else {
+                log('❌ Clarity not loaded', 'warning');
+            }
+        }
+
+        function testHover() {
+            if (window.clarity) {
+                window.clarity("set", "hover_main_continuar", true);
+                log('👆 Event fired: hover_main_continuar = true', 'info');
+            } else {
+                log('❌ Clarity not loaded', 'warning');
+            }
+        }
+
+        function testRedirect() {
+            if (window.clarity) {
+                const data = {
+                    timestamp: new Date().toISOString(),
+                    page: window.location.pathname
+                };
+                window.clarity("set", "redirect_to_offer", data);
+                log(`🎯 Event fired: redirect_to_offer = ${JSON.stringify(data)}`, 'success');
+            } else {
+                log('❌ Clarity not loaded', 'warning');
+            }
+        }
+
+        function clearLog() {
+            document.getElementById('eventLog').innerHTML = '';
+            log('🧹 Log cleared', 'info');
+        }
+
+        // Auto-check on load
+        setTimeout(() => {
+            checkClarityLoaded();
+            log('🚀 Automatic Clarity check complete', 'info');
+        }, 2000);
+    </script>
+</body>
+</html>
